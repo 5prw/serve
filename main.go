@@ -8,7 +8,7 @@ import (
 	"syscall"
 )
 
-const version = "1.0.0"
+var version = "dev" // set via ldflags during build
 
 func main() {
 	// Flags de linha de comando

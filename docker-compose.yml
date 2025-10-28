@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  serve:
+    build: .
+    container_name: serve
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount your files here
+      - ./public:/app/public:ro
+      # Optional: mount custom config
+      # - ./config.json:/app/config.json:ro
+    environment:
+      - TZ=UTC
+    restart: unless-stopped
+    # Optional: use custom config
+    # command: ["-config", "/app/config.json"]
+
+  # Example with HTTPS
+  serve-https:
+    build: .
+    container_name: serve-https
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./public:/app/public:ro
+      - ./certs:/app/certs:ro
+      - ./config-https.json:/app/config.json:ro
+    command: ["-config", "/app/config.json"]
+    restart: unless-stopped
+    profiles:
+      - https
+
+  # Example with authentication
+  serve-auth:
+    build: .
+    container_name: serve-auth
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./private:/app/public:ro
+      - ./config-auth.json:/app/config.json:ro
+    command: ["-config", "/app/config.json"]
+    restart: unless-stopped
+    profiles:
+      - auth

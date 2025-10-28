@@ -17,6 +17,7 @@ go.work
 # Compiled binary
 serve
 serve-*
+dist/
 
 # Configuration files (may contain sensitive data)
 config.json
