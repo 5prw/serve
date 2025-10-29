@@ -1,71 +1,44 @@
 # Serve - Static File Server
 
-A lightweight, fast, and feature-rich static file server written in Go. Perfect for development, testing, and production.
+Um servidor de arquivos estáticos leve, rápido e rico em recursos, escrito em Go. Perfeito para desenvolvimento, testes e produção.
 
-[Português](README.pt-BR.md)
+## Características
 
-## Features
-
-### Core
-- ✅ HTTP/HTTPS static file server
-- ✅ Single executable with no dependencies
+### Básicas
+- ✅ Servidor HTTP/HTTPS de arquivos estáticos
+- ✅ Executável único sem dependências
 - ✅ Cross-platform (Linux, Windows, macOS)
-- ✅ Configuration via JSON file or command-line flags
-- ✅ Hot reload configuration
+- ✅ Configuração via arquivo JSON ou flags de linha de comando
+- ✅ Hot reload de configuração
 
-### Security
-- 🔒 HTTPS/TLS support
-- 🔒 Basic authentication (username/password)
-- 🔒 Configurable CORS
-- 🔒 Rate limiting per IP
-- 🔒 IP whitelist/blacklist
-- 🔒 Path traversal protection
-- 🔒 Hidden file blocking (.env, .git, etc.)
-- 🔒 Automatic security headers
+### Segurança
+- 🔒 Suporte HTTPS/TLS
+- 🔒 Autenticação básica (usuário/senha)
+- 🔒 CORS configurável
+- 🔒 Rate limiting por IP
+- 🔒 Whitelist/blacklist de IPs
+- 🔒 Proteção contra path traversal
+- 🔒 Bloqueio de arquivos ocultos (.env, .git, etc)
+- 🔒 Security headers automáticos
 
 ### Performance
-- ⚡ Gzip compression with configurable levels
-- ⚡ ETags for efficient caching
-- ⚡ Configurable cache headers
-- ⚡ Custom HTTP headers
-- ⚡ Configurable timeouts
+- ⚡ Compressão gzip com nível configurável
+- ⚡ ETags para cache eficiente
+- ⚡ Cache headers configuráveis
+- ⚡ Custom headers HTTP
+- ⚡ Timeouts configuráveis
 
-### Features
-- 📁 Optional directory listing
-- 📄 Custom index files
-- 🎯 SPA (Single Page Application) mode
-- 🎨 Custom error pages
-- 📊 Detailed colored logs
-- 📝 Separate access and error logs
+### Funcionalidades
+- 📁 Listagem de diretórios (opcional)
+- 📄 Index files personalizados
+- 🎯 Modo SPA (Single Page Application)
+- 🎨 Páginas de erro customizadas
+- 📊 Logs detalhados com cores
+- 📝 Access logs e error logs separados
 
-## Installation
+## Instalação
 
-### Download Pre-built Binaries
-
-Download the latest release for your platform from the [releases page](https://github.com/yourusername/serve/releases).
-
-#### Linux/macOS
-```bash
-# Download and extract
-tar -xzf serve-linux-amd64.tar.gz
-
-# Make executable and move to PATH
-chmod +x serve-linux-amd64
-sudo mv serve-linux-amd64 /usr/local/bin/serve
-
-# Verify installation
-serve -version
-```
-
-#### Windows
-```powershell
-# Download and extract serve-windows-amd64.zip
-
-# Add to PATH or run directly
-.\serve-windows-amd64.exe -version
-```
-
-### Build from Source
+### Compilar do fonte
 
 ```bash
 git clone https://github.com/yourusername/serve.git
@@ -73,55 +46,52 @@ cd serve
 go build -o serve
 ```
 
-### Using Make
+### Compilar para múltiplas plataformas
 
 ```bash
-# Build for current platform
-make build
+# Linux
+GOOS=linux GOARCH=amd64 go build -o serve-linux
 
-# Build for all platforms
-make build-all
+# Windows
+GOOS=windows GOARCH=amd64 go build -o serve.exe
 
-# Create release archives
-make release-local
-
-# See all options
-make help
+# macOS
+GOOS=darwin GOARCH=amd64 go build -o serve-macos
 ```
 
-## Quick Start
+## Uso Rápido
 
-### Basic Server
+### Servidor básico
 
 ```bash
-# Serve current directory on port 8080
+# Serve o diretório atual na porta 8080
 ./serve
 
-# Serve a specific directory
+# Serve um diretório específico
 ./serve -dir /var/www
 
-# Custom port
+# Porta customizada
 ./serve -port 3000
 
-# Enable directory listing
+# Habilitar listagem de diretórios
 ./serve -list
 ```
 
-### Using Configuration File
+### Usando arquivo de configuração
 
 ```bash
-# Generate example configuration
+# Gerar arquivo de configuração de exemplo
 ./serve -generate-config config.json
 
-# Start with configuration
+# Iniciar com configuração
 ./serve -config config.json
 ```
 
-## Configuration
+## Configuração
 
-### Configuration File
+### Arquivo de Configuração
 
-The configuration file uses JSON format. Complete example:
+O arquivo de configuração usa formato JSON. Exemplo completo:
 
 ```json
 {
@@ -190,46 +160,46 @@ The configuration file uses JSON format. Complete example:
 }
 ```
 
-### Command-Line Options
+### Opções de Linha de Comando
 
 ```
   -config string
-        Path to configuration file (JSON)
+        Caminho para arquivo de configuração (JSON)
 
   -port int
-        Port to listen on (overrides config)
+        Porta para escutar (sobrescreve config)
 
   -host string
-        Host to bind to (overrides config)
+        Host para bind (sobrescreve config)
 
   -dir string
-        Root directory to serve (overrides config)
+        Diretório raiz para servir (sobrescreve config)
 
   -list
-        Enable directory listing
+        Habilitar listagem de diretórios
 
   -generate-config string
-        Generate example config file and exit
+        Gerar arquivo de configuração de exemplo
 
   -version
-        Show version and exit
+        Mostrar versão
 
   -help
-        Show this help message
+        Mostrar ajuda
 ```
 
-## Use Cases
+## Casos de Uso
 
-### 1. Frontend Development
+### 1. Desenvolvimento Frontend
 
 ```bash
-# Serve React/Vue/Angular app
+# Serve aplicação React/Vue/Angular
 ./serve -dir ./dist -port 3000 -list
 ```
 
 ### 2. Single Page Application (SPA)
 
-Create a `config.json`:
+Crie um arquivo `config.json`:
 
 ```json
 {
@@ -248,7 +218,7 @@ Create a `config.json`:
 ./serve -config config.json
 ```
 
-### 3. Server with Authentication
+### 3. Servidor com Autenticação
 
 ```json
 {
@@ -268,10 +238,10 @@ Create a `config.json`:
 }
 ```
 
-### 4. HTTPS Server
+### 4. Servidor HTTPS
 
 ```bash
-# Generate self-signed certificate for testing
+# Gerar certificado autoassinado para testes
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
 ```
 
@@ -289,7 +259,7 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
 }
 ```
 
-### 5. API with CORS
+### 5. API com CORS
 
 ```json
 {
@@ -309,7 +279,7 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
 }
 ```
 
-### 6. Production Server with Rate Limiting
+### 6. Servidor de Produção com Rate Limiting
 
 ```json
 {
@@ -342,21 +312,21 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
 }
 ```
 
-## Security
+## Segurança
 
-### Best Practices
+### Boas Práticas
 
-1. **Always block hidden files** in production:
+1. **Sempre bloqueie arquivos ocultos** em produção:
    ```json
    "block_hidden_files": true
    ```
 
-2. **Use HTTPS** in production:
+2. **Use HTTPS** em produção:
    ```json
    "enable_https": true
    ```
 
-3. **Implement rate limiting** to prevent DDoS attacks:
+3. **Implemente rate limiting** para prevenir ataques DDoS:
    ```json
    "rate_limit": {
      "enabled": true,
@@ -364,7 +334,7 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
    }
    ```
 
-4. **Use authentication** for sensitive content:
+4. **Use autenticação** para conteúdo sensível:
    ```json
    "basic_auth": {
      "enabled": true,
@@ -373,31 +343,31 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
    }
    ```
 
-5. **Whitelist IPs** when possible:
+5. **Whitelist IPs** se possível:
    ```json
    "ip_whitelist": ["192.168.1.0/24"]
    ```
 
 ## Performance
 
-### Optimizations
+### Otimizações
 
-- **Compression**: Enable gzip to reduce response sizes
-- **Cache**: Configure `cache_max_age` appropriately
-- **ETags**: Reduces unnecessary transfers
-- **Timeouts**: Configure to avoid hanging connections
+- **Compressão**: Habilite gzip para reduzir tamanho das respostas
+- **Cache**: Configure `cache_max_age` apropriadamente
+- **ETags**: Reduz transferências desnecessárias
+- **Timeouts**: Configure para evitar conexões pendentes
 
 ### Benchmark
 
 ```bash
-# Install benchmarking tool
+# Instalar ferramenta de benchmark
 go install github.com/rakyll/hey@latest
 
-# Test performance
+# Testar performance
 hey -n 10000 -c 100 http://localhost:8080/
 ```
 
-## Example Logs
+## Exemplos de Logs
 
 ```
 ╔═══════════════════════════════════════╗
@@ -421,60 +391,30 @@ hey -n 10000 -c 100 http://localhost:8080/
 [2025-10-28 14:30:17] GET /app.js - 200 - 12.1ms - 192.168.1.100
 ```
 
-## Docker Support
+## Contribuindo
 
-Create a `Dockerfile`:
+Contribuições são bem-vindas! Por favor:
 
-```dockerfile
-FROM golang:1.21-alpine AS builder
-WORKDIR /app
-COPY . .
-RUN go build -ldflags="-s -w" -o serve
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
-FROM alpine:latest
-RUN apk --no-cache add ca-certificates
-WORKDIR /root/
-COPY --from=builder /app/serve .
-COPY --from=builder /app/config.example.json .
-EXPOSE 8080
-CMD ["./serve"]
-```
+## Licença
 
-Build and run:
+MIT License - veja o arquivo LICENSE para detalhes.
 
-```bash
-docker build -t serve .
-docker run -p 8080:8080 -v $(pwd):/root/files serve -dir /root/files
-```
+## Autor
 
-## Contributing
+Seu Nome - [@seutwitter](https://twitter.com/seutwitter)
 
-Contributions are welcome! Please:
+## Suporte
 
-1. Fork the project
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## Development
-
-See [CONTEXT.md](CONTEXT.md) for detailed development documentation, architecture decisions, and project structure.
-
-## License
-
-MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-- 🐛 [Bug Reports](https://github.com/yourusername/serve/issues)
+- 🐛 [Report de Bugs](https://github.com/yourusername/serve/issues)
 - 💡 [Feature Requests](https://github.com/yourusername/serve/issues)
-- 📖 [Documentation](https://github.com/yourusername/serve/wiki)
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for a list of changes.
+- 📖 [Documentação](https://github.com/yourusername/serve/wiki)
 
 ---
 
-Made with ❤️ in Go
+Feito com ❤️ em Go

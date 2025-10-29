@@ -1,0 +1,46 @@
+# Binaries
+serve
+serve-*
+dist/
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# CI/CD
+.github/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.log
+
+# Configuration files (use custom mounts)
+config.json
+
+# TLS certificates (use custom mounts)
+*.pem
+*.key
+*.crt
+
+# Test files
+*_test.go
+testdata/
+
+# Build artifacts
+*.out
+*.test
