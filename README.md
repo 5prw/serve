@@ -42,7 +42,7 @@ A lightweight, fast, and feature-rich static file server written in Go. Perfect 
 
 ### Download Pre-built Binaries
 
-Download the latest release for your platform from the [releases page](https://github.com/yourusername/serve/releases).
+Download the latest release for your platform from the [releases page](https://github.com/5prw/serve/releases).
 
 #### Linux/macOS
 ```bash
@@ -68,7 +68,7 @@ serve -version
 ### Build from Source
 
 ```bash
-git clone https://github.com/yourusername/serve.git
+git clone https://github.com/5prw/serve.git
 cd serve
 go build -o serve
 ```
@@ -467,9 +467,9 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Support
 
-- 🐛 [Bug Reports](https://github.com/yourusername/serve/issues)
-- 💡 [Feature Requests](https://github.com/yourusername/serve/issues)
-- 📖 [Documentation](https://github.com/yourusername/serve/wiki)
+- 🐛 [Bug Reports](https://github.com/5prw/serve/issues)
+- 💡 [Feature Requests](https://github.com/5prw/serve/issues)
+- 📖 [Documentation](https://github.com/5prw/serve/wiki)
 
 ## Changelog
 

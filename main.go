@@ -241,6 +241,6 @@ FEATURES:
   • Access logging
   • Security headers
 
-For more information, visit: https://github.com/yourusername/serve
+For more information, visit: https://github.com/5prw/serve
 `, version)
 }

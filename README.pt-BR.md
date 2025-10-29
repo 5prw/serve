@@ -41,7 +41,7 @@ Um servidor de arquivos estáticos leve, rápido e rico em recursos, escrito em 
 ### Compilar do fonte
 
 ```bash
-git clone https://github.com/yourusername/serve.git
+git clone https://github.com/5prw/serve.git
 cd serve
 go build -o serve
 ```
@@ -407,9 +407,9 @@ MIT License - veja o arquivo LICENSE para detalhes.
 
 ## Suporte
 
-- 🐛 [Report de Bugs](https://github.com/yourusername/serve/issues)
-- 💡 [Feature Requests](https://github.com/yourusername/serve/issues)
-- 📖 [Documentação](https://github.com/yourusername/serve/wiki)
+- 🐛 [Report de Bugs](https://github.com/5prw/serve/issues)
+- 💡 [Feature Requests](https://github.com/5prw/serve/issues)
+- 📖 [Documentação](https://github.com/5prw/serve/wiki)
 
 ---
 
