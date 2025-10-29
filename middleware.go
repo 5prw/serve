@@ -3,10 +3,12 @@ package main
 import (
 	"compress/gzip"
 	"crypto/subtle"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -171,7 +173,7 @@ func CORSMiddleware(config *CORSConfig) Middleware {
 				}
 
 				if config.MaxAge > 0 {
-					w.Header().Set("Access-Control-Max-Age", string(rune(config.MaxAge)))
+					w.Header().Set("Access-Control-Max-Age", strconv.Itoa(config.MaxAge))
 				}
 			}
 
@@ -363,7 +365,7 @@ func CacheMiddleware(maxAge int) Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if maxAge > 0 {
-				w.Header().Set("Cache-Control", "public, max-age="+string(rune(maxAge)))
+				w.Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
 			}
 			next.ServeHTTP(w, r)
 		})
