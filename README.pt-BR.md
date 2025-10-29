@@ -405,10 +405,6 @@ Contribuições são bem-vindas! Por favor:
 
 MIT License - veja o arquivo LICENSE para detalhes.
 
-## Autor
-
-Seu Nome - [@seutwitter](https://twitter.com/seutwitter)
-
 ## Suporte
 
 - 🐛 [Report de Bugs](https://github.com/yourusername/serve/issues)
