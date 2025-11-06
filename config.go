@@ -8,11 +8,12 @@ import (
 
 // Config representa a configuração completa do servidor
 type Config struct {
-	Server       ServerConfig       `json:"server"`
-	Security     SecurityConfig     `json:"security"`
-	Performance  PerformanceConfig  `json:"performance"`
-	Logging      LoggingConfig      `json:"logging"`
-	Features     FeaturesConfig     `json:"features"`
+	Server        ServerConfig        `json:"server"`
+	Security      SecurityConfig      `json:"security"`
+	Performance   PerformanceConfig   `json:"performance"`
+	Logging       LoggingConfig       `json:"logging"`
+	Features      FeaturesConfig      `json:"features"`
+	RuntimeConfig *RuntimeConfigConfig `json:"runtime_config,omitempty"`
 }
 
 // ServerConfig configurações básicas do servidor
@@ -91,6 +92,17 @@ type FeaturesConfig struct {
 	SPAMode          bool     `json:"spa_mode"` // redireciona tudo para index.html
 	SPAIndex         string   `json:"spa_index"`
 	CustomErrorPages map[string]string `json:"custom_error_pages,omitempty"`
+}
+
+// RuntimeConfigConfig configuração de runtime config
+type RuntimeConfigConfig struct {
+	Enabled      bool     `json:"enabled"`
+	Route        string   `json:"route"`          // rota onde o config será servido (default: /runtime-config.js)
+	Format       string   `json:"format"`         // "js" ou "json" (default: js)
+	VarName      string   `json:"var_name"`       // nome da variável JavaScript (default: APP_CONFIG)
+	EnvPrefix    string   `json:"env_prefix"`     // prefixo das env vars (ex: "APP_" ou "RUNTIME_")
+	EnvVariables []string `json:"env_variables"`  // lista específica de variáveis (alternativa ao prefix)
+	NoCache      bool     `json:"no_cache"`       // se true, adiciona headers no-cache
 }
 
 // DefaultConfig retorna a configuração padrão
