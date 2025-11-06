@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+            output: serve-linux-amd64
+          - goos: linux
+            goarch: arm64
+            output: serve-linux-arm64
+          - goos: darwin
+            goarch: amd64
+            output: serve-darwin-amd64
+          - goos: darwin
+            goarch: arm64
+            output: serve-darwin-arm64
+          - goos: windows
+            goarch: amd64
+            output: serve-windows-amd64.exe
+          - goos: windows
+            goarch: arm64
+            output: serve-windows-arm64.exe
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          go build -ldflags="-s -w -X main.version=${{ github.ref_name }}" -o ${{ matrix.output }}
+
+      - name: Create archive (Unix)
+        if: matrix.goos != 'windows'
+        run: |
+          tar -czf ${{ matrix.output }}.tar.gz ${{ matrix.output }} README.md LICENSE config.example.json
+          sha256sum ${{ matrix.output }}.tar.gz > ${{ matrix.output }}.tar.gz.sha256
+
+      - name: Create archive (Windows)
+        if: matrix.goos == 'windows'
+        run: |
+          zip ${{ matrix.output }}.zip ${{ matrix.output }} README.md LICENSE config.example.json
+          sha256sum ${{ matrix.output }}.zip > ${{ matrix.output }}.zip.sha256
+
+      - name: Upload Release Asset (Unix)
+        if: matrix.goos != 'windows'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ matrix.output }}.tar.gz
+            ${{ matrix.output }}.tar.gz.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset (Windows)
+        if: matrix.goos == 'windows'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ matrix.output }}.zip
+            ${{ matrix.output }}.zip.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
