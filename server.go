@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io/fs"
@@ -119,6 +120,16 @@ func (s *Server) setupHandlers() {
 
 	// Aplica os middlewares
 	handler = Chain(handler, middlewares...)
+
+	// Runtime config route (se habilitado, deve ser registrado antes do handler principal)
+	if s.config.RuntimeConfig != nil && s.config.RuntimeConfig.Enabled {
+		route := s.config.RuntimeConfig.Route
+		if route == "" {
+			route = "/runtime-config.js"
+		}
+		s.mux.HandleFunc(route, s.handleRuntimeConfig)
+		s.logger.Info("Runtime Config enabled at: %s", route)
+	}
 
 	s.mux.Handle("/", handler)
 }
@@ -314,6 +325,107 @@ func formatSize(size int64) string {
 		exp++
 	}
 	return fmt.Sprintf("%.1f %cB", float64(size)/float64(div), "KMGTPE"[exp])
+}
+
+// handleRuntimeConfig serve o runtime config baseado em variáveis de ambiente
+func (s *Server) handleRuntimeConfig(w http.ResponseWriter, r *http.Request) {
+	cfg := s.config.RuntimeConfig
+
+	// Coleta variáveis de ambiente
+	envVars := s.collectEnvVars(cfg)
+
+	// Determina o formato
+	format := cfg.Format
+	if format == "" {
+		format = "js"
+	}
+
+	var content []byte
+	var contentType string
+
+	switch format {
+	case "json":
+		// Formato JSON
+		data, err := json.MarshalIndent(envVars, "", "  ")
+		if err != nil {
+			s.logger.Error("Error marshaling runtime config: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+		content = data
+		contentType = "application/json"
+
+	case "js":
+		fallthrough
+	default:
+		// Formato JavaScript
+		varName := cfg.VarName
+		if varName == "" {
+			varName = "APP_CONFIG"
+		}
+
+		data, err := json.MarshalIndent(envVars, "", "  ")
+		if err != nil {
+			s.logger.Error("Error marshaling runtime config: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		content = []byte(fmt.Sprintf("window.%s = %s;", varName, string(data)))
+		contentType = "application/javascript"
+	}
+
+	// Headers de cache
+	if cfg.NoCache {
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
+	}
+
+	w.Header().Set("Content-Type", contentType)
+	w.Write(content)
+}
+
+// collectEnvVars coleta variáveis de ambiente baseado na configuração
+func (s *Server) collectEnvVars(cfg *RuntimeConfigConfig) map[string]string {
+	result := make(map[string]string)
+
+	// Se há lista específica de variáveis, usa ela
+	if len(cfg.EnvVariables) > 0 {
+		for _, envVar := range cfg.EnvVariables {
+			if value := os.Getenv(envVar); value != "" {
+				result[envVar] = value
+			}
+		}
+		return result
+	}
+
+	// Caso contrário, usa prefixo
+	prefix := cfg.EnvPrefix
+	if prefix == "" {
+		return result // sem prefix e sem lista, retorna vazio
+	}
+
+	// Itera sobre todas as variáveis de ambiente
+	for _, env := range os.Environ() {
+		// Separa nome=valor
+		parts := strings.SplitN(env, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+
+		key := parts[0]
+		value := parts[1]
+
+		// Verifica se tem o prefixo
+		if strings.HasPrefix(key, prefix) {
+			// Remove o prefixo para a chave no resultado
+			cleanKey := strings.TrimPrefix(key, prefix)
+			result[cleanKey] = value
+		}
+	}
+
+	return result
 }
 
 // Template para listagem de diretórios

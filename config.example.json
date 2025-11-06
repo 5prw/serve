@@ -63,5 +63,14 @@
       "403": "403.html",
       "500": "500.html"
     }
+  },
+  "runtime_config": {
+    "enabled": false,
+    "route": "/runtime-config.js",
+    "format": "js",
+    "var_name": "APP_CONFIG",
+    "env_prefix": "APP_",
+    "env_variables": [],
+    "no_cache": true
   }
 }
