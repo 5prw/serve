@@ -35,6 +35,7 @@ Um servidor de arquivos estáticos leve, rápido e rico em recursos, escrito em 
 - 🎨 Páginas de erro customizadas
 - 📊 Logs detalhados com cores
 - 📝 Access logs e error logs separados
+- 🔧 Runtime config para containers/Kubernetes
 
 ## Instalação
 
@@ -156,6 +157,15 @@ O arquivo de configuração usa formato JSON. Exemplo completo:
       "404": "404.html",
       "403": "403.html"
     }
+  },
+  "runtime_config": {
+    "enabled": false,
+    "route": "/runtime-config.js",
+    "format": "js",
+    "var_name": "APP_CONFIG",
+    "env_prefix": "APP_",
+    "env_variables": [],
+    "no_cache": true
   }
 }
 ```
@@ -311,6 +321,69 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
   }
 }
 ```
+
+### 7. Runtime Config para Containers/Kubernetes
+
+Sirva configurações dinâmicas a partir de variáveis de ambiente - perfeito para aplicações containerizadas.
+
+**Caso de uso**: Faça deploy da mesma imagem Docker para dev/staging/prod com configurações diferentes.
+
+```json
+{
+  "server": {
+    "port": 8080,
+    "root_dir": "/app/build"
+  },
+  "features": {
+    "spa_mode": true
+  },
+  "runtime_config": {
+    "enabled": true,
+    "route": "/runtime-config.js",
+    "format": "js",
+    "var_name": "APP_CONFIG",
+    "env_prefix": "APP_",
+    "no_cache": true
+  }
+}
+```
+
+**Deployment Kubernetes**:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+      - name: frontend
+        image: myapp:latest
+        env:
+        - name: APP_API_URL
+          value: "https://api.producao.com"
+        - name: APP_VERSION
+          value: "v1.2.3"
+```
+
+**Uso no Frontend**:
+```html
+<!-- Carrega runtime config -->
+<script src="/runtime-config.js"></script>
+<script>
+  // Acessa configuração
+  fetch(window.APP_CONFIG.API_URL + '/users');
+</script>
+```
+
+**Saída** (`/runtime-config.js`):
+```javascript
+window.APP_CONFIG = {
+  "API_URL": "https://api.producao.com",
+  "VERSION": "v1.2.3"
+};
+```
+
+📖 **Veja [RUNTIME_CONFIG.md](RUNTIME_CONFIG.md) para documentação completa** com exemplos Docker/Kubernetes, boas práticas de segurança e guias de integração para React/Vue/Angular.
 
 ## Segurança
 

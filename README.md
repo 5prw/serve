@@ -37,6 +37,7 @@ A lightweight, fast, and feature-rich static file server written in Go. Perfect 
 - 🎨 Custom error pages
 - 📊 Detailed colored logs
 - 📝 Separate access and error logs
+- 🔧 Runtime config for containers/Kubernetes
 
 ## Installation
 
@@ -186,6 +187,15 @@ The configuration file uses JSON format. Complete example:
       "404": "404.html",
       "403": "403.html"
     }
+  },
+  "runtime_config": {
+    "enabled": false,
+    "route": "/runtime-config.js",
+    "format": "js",
+    "var_name": "APP_CONFIG",
+    "env_prefix": "APP_",
+    "env_variables": [],
+    "no_cache": true
   }
 }
 ```
@@ -341,6 +351,69 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
   }
 }
 ```
+
+### 7. Runtime Config for Containers/Kubernetes
+
+Serve dynamic configuration from environment variables - perfect for containerized applications.
+
+**Use Case**: Deploy the same Docker image to dev/staging/prod with different configurations.
+
+```json
+{
+  "server": {
+    "port": 8080,
+    "root_dir": "/app/build"
+  },
+  "features": {
+    "spa_mode": true
+  },
+  "runtime_config": {
+    "enabled": true,
+    "route": "/runtime-config.js",
+    "format": "js",
+    "var_name": "APP_CONFIG",
+    "env_prefix": "APP_",
+    "no_cache": true
+  }
+}
+```
+
+**Kubernetes Deployment**:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+      - name: frontend
+        image: myapp:latest
+        env:
+        - name: APP_API_URL
+          value: "https://api.production.com"
+        - name: APP_VERSION
+          value: "v1.2.3"
+```
+
+**Frontend Usage**:
+```html
+<!-- Load runtime config -->
+<script src="/runtime-config.js"></script>
+<script>
+  // Access config
+  fetch(window.APP_CONFIG.API_URL + '/users');
+</script>
+```
+
+**Output** (`/runtime-config.js`):
+```javascript
+window.APP_CONFIG = {
+  "API_URL": "https://api.production.com",
+  "VERSION": "v1.2.3"
+};
+```
+
+📖 **See [RUNTIME_CONFIG.md](RUNTIME_CONFIG.md) for complete documentation** with Docker/Kubernetes examples, security best practices, and integration guides for React/Vue/Angular.
 
 ## Security
 
