@@ -40,6 +40,17 @@ clean: ## Clean build artifacts
 test: ## Run tests
 	go test -v ./...
 
+test-coverage: ## Run tests with coverage
+	go test -cover ./...
+
+test-coverage-html: ## Generate HTML coverage report
+	go test -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out -o coverage.html
+	@echo "Coverage report generated: coverage.html"
+
+test-short: ## Run tests without verbose output
+	go test ./...
+
 install: ## Install to $GOPATH/bin
 	go install -ldflags="$(LDFLAGS)"
 
